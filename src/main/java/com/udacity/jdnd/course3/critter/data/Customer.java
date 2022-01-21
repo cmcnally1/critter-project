@@ -1,9 +1,6 @@
 package com.udacity.jdnd.course3.critter.data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 /*
@@ -21,7 +18,9 @@ public class Customer {
     @Column(name = "number")
     private String phoneNumber;
     private String notes;
-    private List<Long> petIds;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Pet> pets;
 
     /*
         Getters and setters
@@ -59,11 +58,11 @@ public class Customer {
         this.notes = notes;
     }
 
-    public List<Long> getPetIds() {
-        return petIds;
+    public List<Pet> getPets() {
+        return pets;
     }
 
-    public void setPetIds(List<Long> petIds) {
-        this.petIds = petIds;
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
     }
 }

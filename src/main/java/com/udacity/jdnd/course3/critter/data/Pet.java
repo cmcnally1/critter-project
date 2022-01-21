@@ -5,6 +5,7 @@ import com.udacity.jdnd.course3.critter.pet.PetType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 
 /*
@@ -19,13 +20,24 @@ public class Pet {
 
     private PetType type;
     private String name;
-    private long ownerId;
+    //private long ownerId;
+
+    @ManyToOne
+    private Customer owner;
     private LocalDate birthDate;
     private String notes;
 
     /*
         Getters and Setters
      */
+
+    public Customer getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Customer owner) {
+        this.owner = owner;
+    }
 
     public long getId() {
         return id;
@@ -49,14 +61,6 @@ public class Pet {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
     }
 
     public LocalDate getBirthDate() {
