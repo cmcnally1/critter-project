@@ -35,7 +35,7 @@ public class Pet {
     private String notes;
 
     // List of appointments this pet is booked in for
-    // A join table is specified in Schedule entity class for this relationship
+    // A join table is specified for this relationship
     @ManyToMany(mappedBy = "pets")
     @Column(name = "appointments")
     private List<Schedule> scheduledAppointments;

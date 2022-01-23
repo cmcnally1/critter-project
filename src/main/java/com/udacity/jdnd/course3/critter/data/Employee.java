@@ -37,7 +37,7 @@ public class Employee {
     private Set<DayOfWeek> daysAvailable;
 
     // List of appointments this employee is booked to work
-    // A join table is specified in Schedule entity for this relationship
+    // A join table is specified for this relationship
     @ManyToMany(mappedBy = "employees")
     @Column(name = "appointments")
     private List<Schedule> scheduledAppointments;
