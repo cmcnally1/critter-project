@@ -2,11 +2,9 @@ package com.udacity.jdnd.course3.critter.data;
 
 import com.udacity.jdnd.course3.critter.pet.PetType;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 /*
     Entity class for Pet
@@ -16,16 +14,31 @@ public class Pet {
 
     @Id
     @GeneratedValue
-    private long id;
+    private long id; // id of the pet
 
+    // Type of animal, stored as an enum string
+    @Enumerated(EnumType.STRING)
     private PetType type;
-    private String name;
-    //private long ownerId;
 
+    // Pet name
+    private String name;
+
+    // Customer who owns this pet
+    // A bidirectional relationship is specified between pet and customer
     @ManyToOne
     private Customer owner;
+
+    // Pet's birthday
     private LocalDate birthDate;
+
+    // Notes about the pet
     private String notes;
+
+    // List of appointments this pet is booked in for
+    // A join table is specified in Schedule entity class for this relationship
+    @ManyToMany(mappedBy = "pets")
+    @Column(name = "appointments")
+    private List<Schedule> scheduledAppointments;
 
     /*
         Getters and Setters
@@ -77,5 +90,13 @@ public class Pet {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public List<Schedule> getScheduledAppointments() {
+        return scheduledAppointments;
+    }
+
+    public void setScheduledAppointments(List<Schedule> scheduledAppointments) {
+        this.scheduledAppointments = scheduledAppointments;
     }
 }

@@ -12,13 +12,20 @@ public class Customer {
 
     @Id
     @GeneratedValue
-    private long id;
+    private long id; // id for the customer
 
+    // Customer's name
     private String name;
+
+    // Customer's phone number
     @Column(name = "number")
     private String phoneNumber;
+
+    // Notes for the customer
     private String notes;
 
+    // List of pets owned by the customer
+    // A bidirectional relationship is specified between owner and pet
     @OneToMany(mappedBy = "owner")
     private List<Pet> pets;
 
