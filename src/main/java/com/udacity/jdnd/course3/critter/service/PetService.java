@@ -51,9 +51,10 @@ public class PetService {
         return petList;
     }
 
-    // Find all pets in the database owned by specific owner
-    public List<Pet> findPetsByOwner(Long ownerId) {
-        // return list of pets by owner id
-        return petRepository.findAllByOwnerId(ownerId);
-    }
+    //TODO: Get the owner from Customer repo and use that to find pet
+//    // Find all pets in the database owned by specific owner
+//    public List<Pet> findPetsByOwner(Long ownerId) {
+//        // return list of pets by owner id
+//        return petRepository.findAllByOwnerId(ownerId);
+//    }
 }
