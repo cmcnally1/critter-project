@@ -26,8 +26,8 @@ public class PetService {
 
     // Save method to persist a pet to the database
     // Returns the ID of the persisted pet
-    public Long save(Pet pet) {
-        return petRepository.save(pet).getId();
+    public Pet save(Pet pet) {
+        return petRepository.save(pet);
     }
 
     // Find pet that matches a given ID
