@@ -1,5 +1,7 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.entity.Customer;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -9,8 +11,7 @@ import java.util.Set;
 /**
  * Handles web requests related to Users.
  *
- * Includes requests for both customers and employees. Splitting this into separate user and customer controllers
- * would be fine too, though that is not part of the required scope for this class.
+ * Includes requests for both customers and employees.
  */
 @RestController
 @RequestMapping("/user")
@@ -50,5 +51,21 @@ public class UserController {
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
         throw new UnsupportedOperationException();
     }
+
+    // Method to convert a customer entity into Data Transfer Object
+    private static CustomerDTO convertCustomerEntityToDTO(Customer customer) {
+        CustomerDTO customerDTO = new CustomerDTO();
+        BeanUtils.copyProperties(customer, customerDTO);
+        return customerDTO;
+    }
+
+    // Method to convert a customer DTO to an entity
+    private static Customer convertCustomerDTOToEntity(CustomerDTO customerDTO) {
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDTO, customer);
+        return customer;
+    }
+
+
 
 }

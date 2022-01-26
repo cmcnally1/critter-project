@@ -21,7 +21,7 @@ public class CustomerService {
     // Inject Customer repository
     @Autowired
     private CustomerRepository customerRepository;
-    // Inject Pet repository for findOwnerByPet method
+    // Inject Pet repository for findCustomerByPet method
     @Autowired
     private PetRepository petRepository;
 
