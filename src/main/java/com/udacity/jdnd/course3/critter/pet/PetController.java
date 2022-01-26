@@ -54,7 +54,7 @@ public class PetController {
     @GetMapping("/owner/{ownerId}")
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
         // Get pets via service
-        List<Pet> retrievedPets = petService.findAllPets();
+        List<Pet> retrievedPets = petService.findPetsByOwner(ownerId);
         // Create new petDTOs list to store values to be returned
         List<PetDTO> petDTOs = new ArrayList<>();
         // Loop through retrieved pets, convert each to DTO and add to DTO list
