@@ -50,10 +50,19 @@ public class PetController {
         return petDTOs;
     }
 
-    //TODO: Implement get owner method
+
     @GetMapping("/owner/{ownerId}")
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
-        throw new UnsupportedOperationException();
+        // Get pets via service
+        List<Pet> retrievedPets = petService.findAllPets();
+        // Create new petDTOs list to store values to be returned
+        List<PetDTO> petDTOs = new ArrayList<>();
+        // Loop through retrieved pets, convert each to DTO and add to DTO list
+        for (int i = 0; i < retrievedPets.size(); i++){
+            petDTOs.add(convertEntityToDTO(retrievedPets.get(i)));
+        }
+        // Return PetDTO list
+        return petDTOs;
     }
 
     // Method to convert a pet entity into Data Transfer Object

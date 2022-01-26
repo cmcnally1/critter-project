@@ -51,10 +51,15 @@ public class PetService {
         return petList;
     }
 
-    //TODO: Get the owner from Customer repo and use that to find pet
-//    // Find all pets in the database owned by specific owner
-//    public List<Pet> findPetsByOwner(Long ownerId) {
-//        // return list of pets by owner id
-//        return petRepository.findAllByOwnerId(ownerId);
-//    }
+    // Find all pets in the database owned by specific owner
+    public List<Pet> findPetsByOwner(Long ownerId) {
+        // Get pets by owner id using customer query in repository
+        List<Pet> pets = petRepository.findAllByOwnerId(ownerId);
+        // If pets are empty, throw exception
+        if (pets.isEmpty()){
+            throw new PetNotFoundException();
+        }
+        // Return list of pets
+        return pets;
+    }
 }
