@@ -1,10 +1,12 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.entity.Customer;
+import com.udacity.jdnd.course3.critter.service.CustomerService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -17,19 +19,37 @@ import java.util.Set;
 @RequestMapping("/user")
 public class UserController {
 
+    // Inject customer service
+    private CustomerService customerService;
+
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        throw new UnsupportedOperationException();
+        // Create a customer entity to be persisted from the DTO
+        Customer customerToSave = convertCustomerDTOToEntity(customerDTO);
+        // Save the customer via the service and convert the returned entity to be returned
+        return convertCustomerEntityToDTO(customerService.save(customerToSave));
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+        // Get all customers via the service
+        List<Customer> retrievedCustomers = customerService.findAllCustomers();
+        // Create a new list of customer DTOs to store values to be returned
+        List<CustomerDTO> customerDTOs = new ArrayList<>();
+        // Loop through retrieved customers, convert each to DTO and add to list
+        for (int i = 0; i < retrievedCustomers.size(); i++) {
+            customerDTOs.add(convertCustomerEntityToDTO(retrievedCustomers.get(i)));
+        }
+        // Return CustomerDTO list
+        return customerDTOs;
     }
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+        // Get the customer via the service
+        Customer retrievedCustomer = customerService.findCustomerByPet(petId);
+        // Convert retrieved customer to DTO and return
+        return convertCustomerEntityToDTO(retrievedCustomer);
     }
 
     @PostMapping("/employee")
@@ -65,7 +85,5 @@ public class UserController {
         BeanUtils.copyProperties(customerDTO, customer);
         return customer;
     }
-
-
 
 }
