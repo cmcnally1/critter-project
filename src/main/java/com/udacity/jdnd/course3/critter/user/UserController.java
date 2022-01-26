@@ -3,6 +3,7 @@ package com.udacity.jdnd.course3.critter.user;
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -20,6 +21,7 @@ import java.util.Set;
 public class UserController {
 
     // Inject customer service
+    @Autowired
     private CustomerService customerService;
 
     @PostMapping("/customer")
