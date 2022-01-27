@@ -1,6 +1,7 @@
 package com.udacity.jdnd.course3.critter.pet;
 
 import com.udacity.jdnd.course3.critter.entity.Pet;
+import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.PetService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class PetController {
     // Inject pet service
     @Autowired
     private PetService petService;
+    // Inject Customer service
+    @Autowired
+    private CustomerService customerService;
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
@@ -66,16 +70,27 @@ public class PetController {
     }
 
     // Method to convert a pet entity into Data Transfer Object
-    private static PetDTO convertEntityToDTO(Pet pet){
+    private PetDTO convertEntityToDTO(Pet pet){
         PetDTO petDTO = new PetDTO();
-        BeanUtils.copyProperties(pet, petDTO);
+        BeanUtils.copyProperties(pet, petDTO, "owner");
+
+        // Convert owner to id for DTO
+        if (pet.getOwner() != null) {
+            petDTO.setOwnerId(pet.getOwner().getId());
+        }
         return petDTO;
     }
 
     // Method to convert a pet DTO into an entity
-    private static Pet convertDTOToEntity(PetDTO petDTO){
+    private Pet convertDTOToEntity(PetDTO petDTO){
         Pet pet = new Pet();
-        BeanUtils.copyProperties(petDTO, pet);
+        BeanUtils.copyProperties(petDTO, pet, "ownerId");
+
+        // Convert owner id in DTO to owner entity for pet
+        Long id = petDTO.getOwnerId();
+        if (id != null){
+            pet.setOwner(customerService.findCustomerById(id));
+        }
         return pet;
     }
 }

@@ -2,8 +2,10 @@ package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Employee;
+import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
+import com.udacity.jdnd.course3.critter.service.PetService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,9 @@ public class UserController {
     // Inject Employee service
     @Autowired
     private EmployeeService employeeService;
+    // Inject Pet service
+    @Autowired
+    private PetService petService;
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
@@ -96,28 +101,49 @@ public class UserController {
     }
 
     // Method to convert a customer entity into Data Transfer Object
-    private static CustomerDTO convertCustomerEntityToDTO(Customer customer) {
+    private CustomerDTO convertCustomerEntityToDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
-        BeanUtils.copyProperties(customer, customerDTO);
+        BeanUtils.copyProperties(customer, customerDTO, "pets");
+
+        // Convert the list of pets for the entity to pet ids for DTO
+        List<Long> ids = new ArrayList<>();
+        List<Pet> pets = customer.getPets();
+        if (pets != null) {
+            for (Pet pet : pets){
+                ids.add(pet.getId());
+            }
+            // Add ids to entity
+            customerDTO.setPetIds(ids);
+        }
         return customerDTO;
     }
 
     // Method to convert a customer DTO to an entity
-    private static Customer convertCustomerDTOToEntity(CustomerDTO customerDTO) {
+    private Customer convertCustomerDTOToEntity(CustomerDTO customerDTO) {
         Customer customer = new Customer();
-        BeanUtils.copyProperties(customerDTO, customer);
+        BeanUtils.copyProperties(customerDTO, customer, "petIds");
+
+        // Get all pets from pet ids in DTO
+        List<Long> petIds = customerDTO.getPetIds();
+        if (petIds != null){
+            List<Pet> pets = new ArrayList<>();
+            for (Long id : petIds) {
+                pets.add(petService.findPetById(id));
+            }
+            customer.setPets(pets);
+        }
         return customer;
     }
 
     // Method to convert an employee entity into Data Transfer Object
-    private static EmployeeDTO convertEmployeeEntityToDTO(Employee employee) {
+    private EmployeeDTO convertEmployeeEntityToDTO(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         BeanUtils.copyProperties(employee, employeeDTO);
         return employeeDTO;
     }
 
     // Method to convert an employee DTO to an entity
-    private static Employee convertEmployeeDTOToEntity(EmployeeDTO employeeDTO) {
+    private Employee convertEmployeeDTOToEntity(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
         return employee;

@@ -42,10 +42,23 @@ public class CustomerService {
     public List<Customer> findAllCustomers() {
         // Customer list to store the list of retrieved customers
         List<Customer> customerList = new ArrayList<>();
-        // Find all customers. Returns iterable, so add each to customer list
-        customerRepository.findAll().forEach(customerList::add);
+        // Find all customers. Returns iterable
+        Iterable<Customer> retrievedCustomers = customerRepository.findAll();
+        // Add all retrieved customers to list
+        for (Customer customer : retrievedCustomers) {
+            customerList.add(customer);
+        }
         // Return customer list
         return customerList;
+    }
+
+    // Find customer that matches a given ID
+    public Customer findCustomerById(Long id) {
+        // Search for Customer by id. Store value in optional pet in case customer not found
+        Optional<Customer> searchCustomer = customerRepository.findById(id);
+
+        // Either return the customer found by ID or throw an exception
+        return searchCustomer.orElseThrow(CustomerNotFoundException::new);
     }
 
     public Customer findCustomerByPet(Long petId) {

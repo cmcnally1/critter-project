@@ -25,7 +25,7 @@ public class Pet {
 
     // Customer who owns this pet
     // A bidirectional relationship is specified between pet and customer
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Customer owner;
 
     // Pet's birthday

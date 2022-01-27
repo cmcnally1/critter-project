@@ -1,6 +1,7 @@
 package com.udacity.jdnd.course3.critter.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -26,7 +27,7 @@ public class Customer {
 
     // List of pets owned by the customer
     // A bidirectional relationship is specified between owner and pet
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Pet> pets;
 
     /*
@@ -71,5 +72,15 @@ public class Customer {
 
     public void setPets(List<Pet> pets) {
         this.pets = pets;
+    }
+
+    // Method to add a new pet to pets list
+    public void addNewPet(Pet newPet) {
+        // If customer has no pets, create new list
+        if (pets == null) {
+            pets = new ArrayList<>();
+        }
+        // Add new pet to pets list
+        pets.add(newPet);
     }
 }
