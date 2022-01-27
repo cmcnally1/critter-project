@@ -60,14 +60,18 @@ public class EmployeeService {
         List<Employee> allEmployees = new ArrayList<>();
         List<Employee> suitableEmployees = new ArrayList<>();
 
-        // Retrieve all employees and add to list of all employees
-        employeeRepository.findAll().forEach(allEmployees::add);
+        // Retrieve all employees
+        Iterable<Employee> retrievedEmployees = employeeRepository.findAll();
+
+        // Add all retrieved employees to list of employees
+        for (Employee employee : retrievedEmployees) {
+            allEmployees.add(employee);
+        }
 
         // Loop through all employees to find a suitable employee
         for (int i = 0; i < allEmployees.size(); i++){
-
             // If the current employee has the required skills
-            if (requiredSkills.containsAll(allEmployees.get(i).getSkills())){
+            if (allEmployees.get(i).getSkills().containsAll(requiredSkills)){
                 // And if the current employee is available on the required day
                 if (allEmployees.get(i).getDaysAvailable().contains(requiredDate.getDayOfWeek())){
                     // Add the current employee to the list of suitable employees
