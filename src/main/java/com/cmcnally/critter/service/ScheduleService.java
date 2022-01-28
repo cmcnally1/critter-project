@@ -69,8 +69,14 @@ public class ScheduleService {
         Optional<Pet> searchPet = petRepository.findById(petId);
         // If searchPet contains a pet, assign it to pet. Otherwise, throw exception
         Pet pet = searchPet.orElseThrow(PetNotFoundException::new);
-        // Return the scheduled appointments for that pet
-        return pet.getScheduledAppointments();
+        // Retrieve all schedules that contain the pet
+        List<Schedule> petSchedules = scheduleRepository.findAllByPetsContaining(pet);
+        // If schedule is empty, return exception
+        if (petSchedules.isEmpty()) {
+            throw new ScheduleNotFoundException();
+        }
+        // Return schedules
+        return petSchedules;
     }
 
     // Method to get all scheduled appointments for an employee
@@ -79,19 +85,21 @@ public class ScheduleService {
         Optional<Employee> searchEmployee = employeeRepository.findById(employeeId);
         // If searchEmployee contains an employee, assign to employee. Otherwise, error
         Employee employee = searchEmployee.orElseThrow(EmployeeNotFoundException::new);
-        // Return the appointments for that employee
-        return employee.getScheduledAppointments();
+        // Retrieve all schedules that contain the employee
+        List<Schedule> employeeSchedules = scheduleRepository.findAllByEmployeesContaining(employee);
+        // If schedules are empty, throw exception
+        if (employeeSchedules.isEmpty()) {
+            throw new ScheduleNotFoundException();
+        }
+        // Return schedules
+        return employeeSchedules;
     }
 
     // Method to get all scheduled appointments for a customer
     // Gather them via the customer's pets
     public List<Schedule> findSchedulesForCustomer(Long customerId) {
-        // Search for customer by id
-        Optional<Customer> searchCustomer = customerRepository.findById(customerId);
-        // If customer found, store in variable. Otherwise, throw exception
-        Customer customer = searchCustomer.orElseThrow(CustomerNotFoundException::new);
         // Get the list of pets owned by that customer
-        List<Pet> pets = customer.getPets();
+        List<Pet> pets = petRepository.findAllByOwnerId(customerId);
         // Create list of appointments to store customer appointments
         List<Schedule> scheduleList = new ArrayList<>();
 
@@ -99,14 +107,18 @@ public class ScheduleService {
         if (pets != null) {
             // For each pet owned by the customer
             for (Pet pet : pets) {
-                // For each appointment that pet owns
-                for (Schedule appointment : pet.getScheduledAppointments()) {
-                    // Add that appointment to the list
-                    scheduleList.add(appointment);
+                // Retrieve all the schedules for the pet
+                List<Schedule> petSchedule = scheduleRepository.findAllByPetsContaining(pet);
+                // If that pet has appointments
+                if (petSchedule != null) {
+                    // For each schedule the pet has
+                    for (Schedule schedule : petSchedule) {
+                        // Add that appointment to the overall list
+                        scheduleList.add(schedule);
+                    }
                 }
             }
         }
-
         // If no appointments, throw exception
         if (scheduleList.isEmpty()) {
             throw new ScheduleNotFoundException();
