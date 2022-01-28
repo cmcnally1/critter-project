@@ -13,7 +13,7 @@ import java.util.List;
 public class Pet {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id; // id of the pet
 
     // Type of animal, stored as an enum string

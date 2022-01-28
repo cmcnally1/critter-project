@@ -15,7 +15,7 @@ import java.util.Set;
 public class Schedule {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id; // id for the scheduled appointment
 
     // Scheduled appointments can have multiple employees working them,
